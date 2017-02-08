@@ -9,15 +9,15 @@ cbuffer CBUFFER : register(b0)
 struct GS_IN
 {
 	float4 Pos : SV_POSITION;
-	float3 Col : COLOR;
 	float4 Norm : NORMAL;
+	float2 Tex : TEXCOORD;
 };
 
 struct FS_OUT
 {
 	float4 Pos : SV_POSITION;
-	float3 Col : COLOR;
 	float4 Norm : NORMAL;
+	float2 Tex : TEXCOORD;
 	float4 wPos : POSITION;
 };
 
@@ -31,7 +31,7 @@ void GS_main(triangle GS_IN input[3], inout TriangleStream <FS_OUT> OutputStream
 		output.Pos = mul(mul(mul(input[i].Pos, worldM), viewM), projM);
 		output.Norm = mul(mul(mul(input[i].Norm, worldM), viewM), projM);
 		output.wPos = mul(input[i].Pos, worldM);
-		output.Col = input[i].Col;
+		output.Tex = input[i].Tex;
 
 		OutputStream.Append(output);
 	}

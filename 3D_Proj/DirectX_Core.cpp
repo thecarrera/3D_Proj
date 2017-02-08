@@ -4,10 +4,12 @@ DX::DX()
 {
 	this->amountOfVertecies = 0;
 	this->vCapacity = 150;
+	this->tCapacity = 150;
 	this->nCapacity = 150;
 	this->fCapacity = 150;
 
 	this->vertexArray = new VertexInfo[this->vCapacity];
+	this->textureArray = new VertexInfo[this->tCapacity];
 	this->normalArray = new VertexInfo[this->nCapacity];
 	this->triangleArray = new TriangleInfo[this->fCapacity];
 }
@@ -40,6 +42,7 @@ void DX::CreateD3D(HWND* wndHandle)
 void DX::Clean()
 {
 	SAFE_DELETE(this->vertexArray);
+	SAFE_DELETE(this->textureArray);
 	SAFE_DELETE(this->normalArray);
 	SAFE_DELETE(this->triangleArray);
 
@@ -125,7 +128,7 @@ void DX::Render()
 	this->gDeviceContext->ClearRenderTargetView(this->gBackBufferRTV, clearColor);
 	this->gDeviceContext->ClearDepthStencilView(this->gDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	UINT32 vertexSize = sizeof(float) * 9;
+	UINT32 vertexSize = sizeof(float) * 8;
 	UINT32 offset = 0;
 
 	this->gDeviceContext->IASetInputLayout(this->gVertexLayout);
@@ -137,13 +140,14 @@ void DX::Render()
 	this->gDeviceContext->GSSetShader(this->gGeometryShader, nullptr, 0);
 	this->gDeviceContext->PSSetShader(this->gFragmentShader, nullptr, 0);
 
-	/*D3D11_MAPPED_SUBRESOURCE dataPtr;
+	D3D11_MAPPED_SUBRESOURCE dataPtr;
 	gDeviceContext->Map(this->gCBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &dataPtr);
 
-	values.projM *= DirectX::XMMatrixRotationY(-0.02f);
+	values.viewM *= DirectX::XMMatrixRotationY(-0.02f);
+
 	memcpy(dataPtr.pData, &this->values, sizeof(this->values));
 
-	gDeviceContext->Unmap(this->gCBuffer, 0);*/
+	gDeviceContext->Unmap(this->gCBuffer, 0);
 
 	gDeviceContext->GSSetConstantBuffers(0, 1, &this->gCBuffer);
 
@@ -179,8 +183,8 @@ void DX::CreateShaders()
 
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
 		{ "SV_POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 	gDevice->CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), pVS->GetBufferPointer(), pVS->GetBufferSize(), &this->gVertexLayout);
@@ -307,7 +311,9 @@ void DX::LoadModel()
 	std::ifstream ss("Cube.obj", std::ifstream::in);
 
 	char cmd[256] = { 0 };
+	char mtlName[256] = { 0 };
 	int tempV = 0;
+	int tempT = 0;
 	int tempN = 0;
 	char trash;
 	struct VI
@@ -323,6 +329,25 @@ void DX::LoadModel()
 		{
 			break;
 		}
+		else if (strcmp(cmd, "mtllib") == 0)
+		{
+			ss >> mtlName;
+
+			std::ifstream mtl(mtlName, std::ifstream::in);
+
+			while (mtl.good())
+			{
+				ss >> cmd;
+
+				if (!ss)
+				{
+					break;
+				}
+				if ()
+
+			}
+
+		}
 		else if (strcmp(cmd, "v") == 0)
 		{
 			if (tempV >= this->vCapacity)
@@ -332,11 +357,16 @@ void DX::LoadModel()
 			ss >> this->vertexArray[tempV].x >> this->vertexArray[tempV].y >> this->vertexArray[tempV].z;
 			this->vertexArray[tempV].z = (this->vertexArray[tempV].z * -1.0f);
 			tempV++;
-
-			//ss >> x >> y >> z;
-			//vertexPos.push_back(x);
-			//vertexPos.push_back(y);
-			//vertexPos.push_back(z);
+		}
+		else if (strcmp(cmd, "vt") == 0)
+		{
+			if (tempT >= this->tCapacity)
+			{
+				this->ExpandVertexArray(tempT, &this->tCapacity, this->textureArray);
+			}
+			ss >> this->textureArray[tempT].x >> this->textureArray[tempT].y;
+			this->textureArray[tempT].z = 0;
+			tempT++;
 		}
 		else if (strcmp(cmd, "vn") == 0)
 		{
@@ -370,9 +400,8 @@ void DX::LoadModel()
 				this->triangleArray[this->amountOfVertecies].ny = this->normalArray[temp_vert[i].z - 1].y;
 				this->triangleArray[this->amountOfVertecies].nz = this->normalArray[temp_vert[i].z - 1].z;
 
-				this->triangleArray[this->amountOfVertecies].r = 1.0f;
-				this->triangleArray[this->amountOfVertecies].g = 0.0f;
-				this->triangleArray[this->amountOfVertecies].b = 0.0f;
+				this->triangleArray[this->amountOfVertecies].u = this->textureArray[temp_vert[i].y - 1].x;
+				this->triangleArray[this->amountOfVertecies].v = this->textureArray[temp_vert[i].y - 1].y;
 
 				this->amountOfVertecies++;
 			}
