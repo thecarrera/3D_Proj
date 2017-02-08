@@ -11,7 +11,7 @@
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
-#define WLABEL "Jonathan Carrera 3D-Demo"
+#define WLABEL "JO 3D-Demo"
 #define HEIGHT 800
 #define WIDTH 640
 #define PIXELSAMPLE 4
@@ -50,10 +50,12 @@ private:
 		DirectX::XMMATRIX worldM;
 		DirectX::XMMATRIX viewM;
 		DirectX::XMMATRIX projM;
-
 		int verteciesAmount;
 	};
 	cTOg values;
+
+	struct VertexInfo;
+	struct TriangleInfo;
 
 public:
 	void CreateD3D(HWND* wndHandle);
@@ -67,34 +69,37 @@ public:
 	void ConstantBuffer();
 	void DepthBuffer();
 
-
 public:
 	void LoadModel();
-	void ExpandVertexArray(int i);
+	void ExpandVertexArray(int i, int *capacity, VertexInfo* gArray);
+	void ExpandVertexArray(int i, int *capacity, TriangleInfo* gArray);
 
 private:
 	struct VertexInfo
 	{
 		float x, y, z;
-		float nx, ny, nz;
 	};
 	VertexInfo* vertexArray;
+	VertexInfo* textureArray;
+	VertexInfo* normalArray;
 
-	struct triangleVertex
+	struct TriangleInfo
 	{
 		float x, y, z;
 		float nx, ny, nz;
+		float u, v;
 	};
+	TriangleInfo* triangleArray;
 
-	triangleVertex* triangleArray;
+	DirectX::XMVECTOR* test;
 
 	std::vector<float> vertexPos;
 	std::vector<float> vertexNorm;
 	std::vector<float> vertexFace;
 
-	int amountOfVertecies, vertexCapacity;
+	int amountOfVertecies;
+	int vCapacity, tCapacity, nCapacity, fCapacity;
 
 	DirectX::XMVECTOR cameraPos;
 	DirectX::XMVECTOR lookAT;
-
 };
