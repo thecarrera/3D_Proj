@@ -3,10 +3,13 @@
 DX::DX()
 {
 	this->amountOfVertecies = 0;
-	this->vertexCapacity = 150;
+	this->vCapacity = 150;
+	this->nCapacity = 150;
+	this->fCapacity = 150;
 
-	this->vertexArray = new VertexInfo[this->vertexCapacity];
-
+	this->vertexArray = new VertexInfo[this->vCapacity];
+	this->normalArray = new VertexInfo[this->nCapacity];
+	this->triangleArray = new TriangleInfo[this->fCapacity];
 }
 DX::~DX()
 {
@@ -17,19 +20,29 @@ void DX::CreateD3D(HWND* wndHandle)
 {
 	this->CreateDirect3DContext(wndHandle);
 
-	this->LoadModel();
-
 	this->SetViewport();
 
 	this->ConstantBuffer();
 
 	this->CreateShaders();
 
-
 	//this->CreateTriangleData();
+
+	this->LoadModel();
+
+	for (int i = 0; i < this->amountOfVertecies; i++)
+	{
+		std::cout << "\n" << this->triangleArray[i].x << '\n';
+		std::cout << this->triangleArray[i].y << '\n';
+		std::cout << this->triangleArray[i].z << '\n' << '\n';
+	}
 }
 void DX::Clean()
 {
+	SAFE_DELETE(this->vertexArray);
+	SAFE_DELETE(this->normalArray);
+	SAFE_DELETE(this->triangleArray);
+
 	SAFE_RELEASE(this->gDevice);
 	SAFE_RELEASE(this->gDeviceContext);
 	SAFE_RELEASE(this->gSwapChain);
@@ -52,14 +65,16 @@ void DX::CreateDirect3DContext(HWND* wndHandle)
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	scd.OutputWindow = *wndHandle;
-	scd.SampleDesc.Count = 4;
+	scd.BufferDesc.Width = WIDTH;
+	scd.BufferDesc.Height = HEIGHT;
+	scd.SampleDesc.Count = PIXELSAMPLE;
 	scd.Windowed = TRUE;
 
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(
 		NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		NULL,
+		D3D11_CREATE_DEVICE_DEBUG,
 		NULL,
 		NULL,
 		D3D11_SDK_VERSION,
@@ -84,7 +99,7 @@ void DX::CreateDirect3DContext(HWND* wndHandle)
 
 		hr = gDevice->CreateDepthStencilView(this->gDepthStencil, nullptr, &this->gDSV);
 
-		gDevice->CreateRenderTargetView(pBackBuffer, NULL, &this->gBackBufferRTV);
+		hr = gDevice->CreateRenderTargetView(pBackBuffer, NULL, &this->gBackBufferRTV);
 
 		pBackBuffer->Release();
 
@@ -105,11 +120,12 @@ void DX::SetViewport()
 }
 void DX::Render()
 {
-	float clearColor[] = { 0, 0, 1, 1 };
+	float clearColor[] = { 0.25, 0.f, .5f, 1 };
 
 	this->gDeviceContext->ClearRenderTargetView(this->gBackBufferRTV, clearColor);
+	this->gDeviceContext->ClearDepthStencilView(this->gDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	UINT32 vertexSize = sizeof(vertexPos);
+	UINT32 vertexSize = sizeof(float) * 9;
 	UINT32 offset = 0;
 
 	this->gDeviceContext->IASetInputLayout(this->gVertexLayout);
@@ -121,20 +137,19 @@ void DX::Render()
 	this->gDeviceContext->GSSetShader(this->gGeometryShader, nullptr, 0);
 	this->gDeviceContext->PSSetShader(this->gFragmentShader, nullptr, 0);
 
-	//D3D11_MAPPED_SUBRESOURCE dataPtr;
-	//gDeviceContext->Map(this->gCBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &dataPtr);
+	/*D3D11_MAPPED_SUBRESOURCE dataPtr;
+	gDeviceContext->Map(this->gCBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &dataPtr);
 
-	//values.viewM *= DirectX::XMMatrixRotationY(-0.02f);
-	//memcpy(dataPtr.pData, &this->values, sizeof(this->values));
+	values.projM *= DirectX::XMMatrixRotationY(-0.02f);
+	memcpy(dataPtr.pData, &this->values, sizeof(this->values));
 
-	//gDeviceContext->Unmap(this->gCBuffer, 0);
+	gDeviceContext->Unmap(this->gCBuffer, 0);*/
 
 	gDeviceContext->GSSetConstantBuffers(0, 1, &this->gCBuffer);
 
-	//kamera jävla nöt
-
 	gDeviceContext->Draw(this->amountOfVertecies,0);
 
+	gSwapChain->Present(1,0);
 }
 
 void DX::CreateShaders()
@@ -155,7 +170,7 @@ void DX::CreateShaders()
 		&error
 	);
 
-	this->gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), nullptr, &this->gVertexShader);
+	this->gDevice->CreateVertexShader(pVS->GetBufferPointer(), pVS->GetBufferSize(), NULL, &this->gVertexShader);
 
 	if (error)
 	{
@@ -163,12 +178,13 @@ void DX::CreateShaders()
 	}
 
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "SV_POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	gDevice->CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), pVS->GetBufferPointer(), pVS->GetBufferSize(), &this->gVertexLayout);
+
 
 	SAFE_RELEASE(pVS);
 
@@ -186,7 +202,7 @@ void DX::CreateShaders()
 		&pGS,
 		&error
 	);
-	gDevice->CreateGeometryShader(pGS->GetBufferPointer(), pGS->GetBufferSize(), nullptr, &this->gGeometryShader);
+	gDevice->CreateGeometryShader(pGS->GetBufferPointer(), pGS->GetBufferSize(), NULL, &this->gGeometryShader);
 
 	if (error)
 	{
@@ -223,14 +239,14 @@ void DX::CreateShaders()
 }
 void DX::ConstantBuffer()
 {
-	this->cameraPos = { 0, 0, -50 };
+	this->cameraPos = { 0, 0, -2 };
 	this->lookAT = { 0 };
 	DirectX::XMVECTOR upVec = { 0, 1, 0 };
 
 	float FOV = { 0.45f * PI };
 	float ARO = (float)WIDTH / (float)HEIGHT;
 	float nPlane = 0.1f;
-	float fPlane = 100.0f;
+	float fPlane = 20.0f;
 
 	DirectX::XMMATRIX worldM = { 1,0,0,0,
 								 0,1,0,0,
@@ -271,7 +287,7 @@ void DX::DepthBuffer()
 	dBufferDesc.MipLevels = 1;
 	dBufferDesc.ArraySize = 1;
 	dBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	dBufferDesc.SampleDesc.Count = 4;
+	dBufferDesc.SampleDesc.Count = PIXELSAMPLE;
 	dBufferDesc.SampleDesc.Quality = 0;
 	dBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	dBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -288,11 +304,17 @@ void DX::DepthBuffer()
 
 void DX::LoadModel()
 {
-	std::ifstream ss("Samurai.obj", std::ifstream::in);
+	std::ifstream ss("Cube.obj", std::ifstream::in);
 
 	char cmd[256] = { 0 };
-	char tmpInfo[256] = { 0 };
 	int tempV = 0;
+	int tempN = 0;
+	char trash;
+	struct VI
+	{
+		int x, y, z;
+	};
+	VI temp_vert[3];
 
 	while (ss.good())
 	{
@@ -303,62 +325,116 @@ void DX::LoadModel()
 		}
 		else if (strcmp(cmd, "v") == 0)
 		{
-			if (tempV >= this->vertexCapacity)
+			if (tempV >= this->vCapacity)
 			{
-				this->ExpandVertexArray(tempV);
+				this->ExpandVertexArray(tempV, &this->vCapacity, this->vertexArray);
 			}
 			ss >> this->vertexArray[tempV].x >> this->vertexArray[tempV].y >> this->vertexArray[tempV].z;
+			this->vertexArray[tempV].z = (this->vertexArray[tempV].z * -1.0f);
 			tempV++;
-
 
 			//ss >> x >> y >> z;
 			//vertexPos.push_back(x);
 			//vertexPos.push_back(y);
 			//vertexPos.push_back(z);
-
 		}
 		else if (strcmp(cmd, "vn") == 0)
 		{
-			
+			if (tempN >= this->nCapacity)
+			{
+				this->ExpandVertexArray(tempN, &this->nCapacity, this->normalArray);
+			}
+			ss >> this->normalArray[tempN].x >> this->normalArray[tempN].y >> this->normalArray[tempN].z;
+			this->normalArray[tempN].z = (this->normalArray[tempN].z * -1.0f);
+			tempN++;
 		}
 		else if (strcmp(cmd, "f") == 0)
 		{
-			
+			for (int i = 3; i > 0; i--)
+			{
+				ss >> temp_vert[i-1].x >> trash >> temp_vert[i-1].y >> trash >> temp_vert[i-1].z;
+			}
+
+			for(int i = 0; i < 3; i++)
+			{
+				if (this->amountOfVertecies >= this->fCapacity)
+				{
+					this->ExpandVertexArray(amountOfVertecies, &this->fCapacity, this->triangleArray);
+				}
+
+				this->triangleArray[this->amountOfVertecies].x = this->vertexArray[temp_vert[i].x - 1].x;
+				this->triangleArray[this->amountOfVertecies].y = this->vertexArray[temp_vert[i].x - 1].y;
+				this->triangleArray[this->amountOfVertecies].z = this->vertexArray[temp_vert[i].x - 1].z;
+
+				this->triangleArray[this->amountOfVertecies].nx = this->normalArray[temp_vert[i].z - 1].x;
+				this->triangleArray[this->amountOfVertecies].ny = this->normalArray[temp_vert[i].z - 1].y;
+				this->triangleArray[this->amountOfVertecies].nz = this->normalArray[temp_vert[i].z - 1].z;
+
+				this->triangleArray[this->amountOfVertecies].r = 1.0f;
+				this->triangleArray[this->amountOfVertecies].g = 0.0f;
+				this->triangleArray[this->amountOfVertecies].b = 0.0f;
+
+				this->amountOfVertecies++;
+			}
 		}
 	}
 
-	for (int i = 0; i < tempV; i++)
+	HRESULT hr;
+
+	D3D11_BUFFER_DESC bufferDesc;
+	memset(&bufferDesc, 0, sizeof(bufferDesc));
+	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufferDesc.ByteWidth = sizeof(TriangleInfo) * this->amountOfVertecies;
+	
+	D3D11_SUBRESOURCE_DATA data;
+	data.pSysMem = this->triangleArray;
+	hr = this->gDevice->CreateBuffer(&bufferDesc, &data, &this->gVertexBuffer);
+
+	if (FAILED(hr))
 	{
-		std::cout << this->vertexArray[i].x << ',' << this->vertexArray[i].y << ',' << this->vertexArray[i].z << '\n';
+		return exit(-1);
 	}
 
-	//for (int i = vertexPos.begin(); i != vertexPos.end(); ++i)
-	//{
-	//	std::cout << ' ' << i;
-	//}
-
-	//D3D11_BUFFER_DESC bufferDesc;
-	//memset(&bufferDesc, 0, sizeof(bufferDesc));
-	//bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	//bufferDesc.ByteWidth = sizeof(this->vertexArray);
-
-	//D3D11_SUBRESOURCE_DATA data;
-	//data.pSysMem = this->vertexArray;
-	//this->gDevice->CreateBuffer(&bufferDesc, &data, &this->gVertexBuffer);
-
 }
-void DX::ExpandVertexArray(int tmpi)
+void DX::ExpandVertexArray(int tmpi, int* capacity , VertexInfo* gArray)
 {
-	this->vertexCapacity = this->vertexCapacity + 300;
-	VertexInfo* tempArray = new VertexInfo[this->vertexCapacity];
+	*capacity = *capacity + 300;
+
+	VertexInfo* tempArray = new VertexInfo[*capacity];
 
 	for (int i = 0; i < tmpi; i++)
 	{
-		tempArray[i] = this->vertexArray[i];
+		tempArray[i].x = gArray[i].x;
+		tempArray[i].y = gArray[i].y;
+		tempArray[i].z = gArray[i].z;
 	}
 
-	delete[] this->vertexArray;
+	for (int i = 0; i < tmpi; i++)
+	{
+		std::cout << "\n\n\n" << tempArray[i].x << ' ' << gArray[i].x << "\n";
+		std::cout << tempArray[i].y << ' ' << gArray[i].y << "\n";
+		std::cout << tempArray[i].z << ' ' << gArray[i].z << "\n\n";
+	}
 
-	this->vertexArray = tempArray;
+	std::cout << "\n--------------------------------------------------\n";
+
+	SAFE_DELETE(gArray);
+
+	gArray = tempArray;
+}
+void DX::ExpandVertexArray(int tmpi, int* capacity, TriangleInfo* gArray)
+{
+	*capacity = *capacity + 300;
+
+	TriangleInfo* tempTri = new TriangleInfo[*capacity];
+
+	for (int i = 0; i < tmpi; i++)
+	{
+		tempTri[i] = gArray[i];
+	}
+
+	SAFE_DELETE(gArray);
+
+	gArray = tempTri;
 }

@@ -8,17 +8,17 @@ cbuffer CBUFFER : register(b0)
 
 struct GS_IN
 {
-	float3 Pos : POSITION;
+	float4 Pos : SV_POSITION;
 	float3 Col : COLOR;
-	float3 Norm : NORMAL;
+	float4 Norm : NORMAL;
 };
 
 struct FS_OUT
 {
-	float4 Pos : POSITION;
+	float4 Pos : SV_POSITION;
 	float3 Col : COLOR;
 	float4 Norm : NORMAL;
-	float4 wPos : WPOSITION;
+	float4 wPos : POSITION;
 };
 
 [maxvertexcount(3)]
@@ -28,24 +28,10 @@ void GS_main(triangle GS_IN input[3], inout TriangleStream <FS_OUT> OutputStream
 
 	for (int i = 0; i < 3; i++)
 	{
-		float4 mPos = float4(input[i].Pos, 1.f) + float4(input[i].Norm, 1.f);
-		output.Pos = mul(mul(mul(float4(input[i].Pos, 1.0f), worldM), viewM), projM);
-		output.Norm = mul(mul(mul(float4(input[i].Norm, 1.f), worldM), viewM), projM);
-		output.wPos = mul(mPos, worldM);
+		output.Pos = mul(mul(mul(input[i].Pos, worldM), viewM), projM);
+		output.Norm = mul(mul(mul(input[i].Norm, worldM), viewM), projM);
+		output.wPos = mul(input[i].Pos, worldM);
 		output.Col = input[i].Col;
-
-		OutputStream.Append(output);
-	}
-
-	OutputStream.RestartStrip();
-
-	for (int j = 0; j < 3; j++)
-	{
-		float4 mPos = float4(input[j].Pos, 1.f) + float4(input[j].Norm, 1.f);
-		output.Pos = mul(mul(mul((float4(input[j].Pos, 1.0f) + float4(input[j].Norm, 1.f)), worldM), viewM), projM);
-		output.Norm = mul(mul(mul(float4(input[j].Norm, 1.f), worldM), viewM), projM);
-		output.Col = input[j].Col;
-		output.wPos = mul(mPos, worldM);
 
 		OutputStream.Append(output);
 	}
