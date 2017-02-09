@@ -1,7 +1,0 @@
-﻿  Main.cpp
-d:\skola\3dprog\3d_proj-master\3d_proj\main.cpp(3): warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
-  d:\skola\3dprog\3d_proj-master\3d_proj\main.cpp(3): note: command-line arguments:  see previous definition of '_CRT_SECURE_NO_WARNINGS'
-  DirectX_Core.cpp
-  Generating Code...
-  3D_Proj.vcxproj -> D:\skola\3Dprog\3D_Proj-master\Debug\3D_Proj.exe
-  3D_Proj.vcxproj -> D:\skola\3Dprog\3D_Proj-master\Debug\3D_Proj.pdb (Partial PDB)
