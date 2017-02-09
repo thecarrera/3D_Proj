@@ -1,6 +1,5 @@
 #include "DirectX.h"
 
-using namespace DirectX;
 DX::DX()
 {
 	this->amountOfVertecies = 0;
@@ -13,18 +12,15 @@ DX::DX()
 	this->textureArray = new VertexInfo[this->tCapacity];
 	this->normalArray = new VertexInfo[this->nCapacity];
 	this->triangleArray = new TriangleInfo[this->fCapacity];
-	this->Xinput = NULL;
 }
 DX::~DX()
 {
 	this->Clean();
 }
 
-void DX::CreateD3D(HMODULE hModule,HWND* wndHandle)
+void DX::CreateD3D(HWND* wndHandle)
 {
 	this->CreateDirect3DContext(wndHandle);
-
-	this->createInput(hModule,*wndHandle);
 
 	this->SetViewport();
 
@@ -49,7 +45,6 @@ void DX::Clean()
 	SAFE_DELETE(this->textureArray);
 	SAFE_DELETE(this->normalArray);
 	SAFE_DELETE(this->triangleArray);
-	this->Xinput->~InputManager();
 
 	SAFE_RELEASE(this->gDevice);
 	SAFE_RELEASE(this->gDeviceContext);
@@ -61,7 +56,6 @@ void DX::Clean()
 	SAFE_RELEASE(this->gGeometryShader);
 	SAFE_RELEASE(this->gFragmentShader);
 	SAFE_RELEASE(this->gCBuffer);
-	
 }
 
 void DX::CreateDirect3DContext(HWND* wndHandle)
@@ -148,47 +142,19 @@ void DX::Render()
 
 	D3D11_MAPPED_SUBRESOURCE dataPtr;
 	gDeviceContext->Map(this->gCBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &dataPtr);
-	
-	
-	this->UpdateCamera();
 
-	
+	values.viewM *= DirectX::XMMatrixRotationY(-0.02f);
+
 	memcpy(dataPtr.pData, &this->values, sizeof(this->values));
 
 	gDeviceContext->Unmap(this->gCBuffer, 0);
 
 	gDeviceContext->GSSetConstantBuffers(0, 1, &this->gCBuffer);
 
-	gDeviceContext->Draw(this->amountOfVertecies, 0);
+	gDeviceContext->Draw(this->amountOfVertecies,0);
 
-	gSwapChain->Present(1, 0);
+	gSwapChain->Present(1,0);
 }
-
-void DX::UpdateCamera() {
-	CamRotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(camPitch, camYaw, 0);
-	lookAT		= DirectX::XMVector3TransformCoord(DefaultForward, CamRotationMatrix);
-	lookAT		= DirectX::XMVector3Normalize(lookAT);
-
-	DirectX::XMMATRIX RotateYTempMatrix;
-	RotateYTempMatrix = DirectX::XMMatrixRotationY(camYaw);
-
-	CamRight	= DirectX::XMVector3TransformCoord(DefaultRight, RotateYTempMatrix);
-	upVec		= DirectX::XMVector3TransformCoord(upVec, RotateYTempMatrix);
-	CamForward	= DirectX::XMVector3TransformCoord(DefaultForward, RotateYTempMatrix);
-
-	cameraPos	+= moveLeftRight*CamRight;
-	cameraPos	+= moveBackForward*CamForward;
-
-	moveLeftRight = 0.0f;
-	moveBackForward = 0.0f;
-
-	lookAT = cameraPos + lookAT;
-
-	values.viewM = XMMatrixLookAtLH(cameraPos, lookAT, upVec);
-
-}
-
-
 
 void DX::CreateShaders()
 {
@@ -218,7 +184,7 @@ void DX::CreateShaders()
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
 		{ "SV_POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 	gDevice->CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), pVS->GetBufferPointer(), pVS->GetBufferSize(), &this->gVertexLayout);
@@ -278,8 +244,8 @@ void DX::CreateShaders()
 void DX::ConstantBuffer()
 {
 	this->cameraPos = { 0, 0, -2 };
-	this->lookAT = { 0,0,0 };
-	this->upVec = { 0, 1, 0 };
+	this->lookAT = { 0 };
+	DirectX::XMVECTOR upVec = { 0, 1, 0 };
 
 	float FOV = { 0.45f * PI };
 	float ARO = (float)WIDTH / (float)HEIGHT;
@@ -287,9 +253,9 @@ void DX::ConstantBuffer()
 	float fPlane = 20.0f;
 
 	DirectX::XMMATRIX worldM = { 1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1 };
+								 0,1,0,0,
+								 0,0,1,0,
+								 0,0,0,1 };
 
 	DirectX::XMMATRIX viewM = DirectX::XMMatrixLookAtLH(cameraPos, lookAT, upVec);
 	DirectX::XMMATRIX projM = DirectX::XMMatrixPerspectiveFovLH(FOV, ARO, nPlane, fPlane);
@@ -316,7 +282,7 @@ void DX::ConstantBuffer()
 	}
 
 }
-void DX::DepthBuffer()
+void DX::DepthBuffer() 
 {
 	HRESULT hr;
 	D3D11_TEXTURE2D_DESC dBufferDesc;
@@ -363,25 +329,25 @@ void DX::LoadModel()
 		{
 			break;
 		}
-		//else if (strcmp(cmd, "mtllib") == 0)
-		//{
-		//	/*ss >> mtlName;
+		else if (strcmp(cmd, "mtllib") == 0)
+		{
+			ss >> mtlName;
 
-		//	std::ifstream mtl(mtlName, std::ifstream::in);
+			std::ifstream mtl(mtlName, std::ifstream::in);
 
-		//	while (mtl.good())
-		//	{
-		//		ss >> cmd;
+			while (mtl.good())
+			{
+				ss >> cmd;
 
-		//		if (!ss)
-		//		{
-		//			break;
-		//		}
-		//		if ()
+				if (!ss)
+				{
+					break;
+				}
+				if ()
 
-		//	}*/
+			}
 
-		//}
+		}
 		else if (strcmp(cmd, "v") == 0)
 		{
 			if (tempV >= this->vCapacity)
@@ -416,10 +382,10 @@ void DX::LoadModel()
 		{
 			for (int i = 3; i > 0; i--)
 			{
-				ss >> temp_vert[i - 1].x >> trash >> temp_vert[i - 1].y >> trash >> temp_vert[i - 1].z;
+				ss >> temp_vert[i-1].x >> trash >> temp_vert[i-1].y >> trash >> temp_vert[i-1].z;
 			}
 
-			for (int i = 0; i < 3; i++)
+			for(int i = 0; i < 3; i++)
 			{
 				if (this->amountOfVertecies >= this->fCapacity)
 				{
@@ -449,7 +415,7 @@ void DX::LoadModel()
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.ByteWidth = sizeof(TriangleInfo) * this->amountOfVertecies;
-
+	
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = this->triangleArray;
 	hr = this->gDevice->CreateBuffer(&bufferDesc, &data, &this->gVertexBuffer);
@@ -460,7 +426,7 @@ void DX::LoadModel()
 	}
 
 }
-void DX::ExpandVertexArray(int tmpi, int* capacity, VertexInfo* gArray)
+void DX::ExpandVertexArray(int tmpi, int* capacity , VertexInfo* gArray)
 {
 	*capacity = *capacity + 300;
 
@@ -500,19 +466,4 @@ void DX::ExpandVertexArray(int tmpi, int* capacity, TriangleInfo* gArray)
 	SAFE_DELETE(gArray);
 
 	gArray = tempTri;
-}
-
-bool DX::createInput(HMODULE hmodule, HWND hwnd) {
-	Xinput = new InputManager();
-	if (!Xinput->Initialize(hmodule, hwnd, WIDTH, HEIGHT))return false;
-
-	Xinput->Update();
-
-	return true;
-}
-
-void DX::Update() {
-	this->Render();
-	this->Xinput->Update();
-
 }
