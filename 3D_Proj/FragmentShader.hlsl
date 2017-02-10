@@ -16,5 +16,5 @@ float4 FS_main(FS_IN input) : SV_Target
 	/*float spec = dot(r, -input.wPos.xyz);*/
 
 	/*float3 s = * cos + pow(spec, 2) * float3(1, 1, 1);*/
-    return float4(0.0f,1.0f,1.0f, 1.0f);
+	return float4(1.0f,1.0f,1.0f, 1.0f);
 }
