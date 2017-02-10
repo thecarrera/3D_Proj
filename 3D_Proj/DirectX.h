@@ -11,10 +11,12 @@
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
+#include "InputManager.h"
+
 #define WLABEL "JO 3D-Demo"
 #define HEIGHT 800
 #define WIDTH 640
-#define PIXELSAMPLE 4
+#define PIXELSAMPLE 1
 
 #define PI 3.14159265359f
 
@@ -58,12 +60,13 @@ private:
 	struct TriangleInfo;
 
 public:
-	void CreateD3D(HWND* wndHandle);
+	void CreateD3D(HMODULE hmodule,HWND* wndHandle);
 	void Clean();
-	
+
 	void CreateDirect3DContext(HWND* wndHandle);
 	void SetViewport();
 	void Render();
+	void Update();
 
 	void CreateShaders();
 	void ConstantBuffer();
@@ -102,4 +105,27 @@ private:
 
 	DirectX::XMVECTOR cameraPos;
 	DirectX::XMVECTOR lookAT;
+	DirectX::XMVECTOR upVec;
+
+
+public:
+	InputManager* getInputManager();
+	bool createInput(HMODULE hmodule, HWND hwnd);
+
+	void UpdateCamera();
+private:
+	InputManager* Xinput;
+	DirectX::XMVECTOR DefaultForward = DirectX::XMVectorSet(0.0f,0.0f,1.0f,0.0f);
+	DirectX::XMVECTOR DefaultRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR CamForward = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	DirectX::XMVECTOR CamRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+
+	DirectX::XMMATRIX CamRotationMatrix;
+	DirectX::XMMATRIX groundWorld;
+
+	float moveLeftRight = 0.0f;
+	float moveBackForward = 0.0f;
+
+	float camYaw = 0.0f;
+	float camPitch = 0.0f;
 };
