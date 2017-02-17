@@ -17,7 +17,7 @@ GS_OUT VS_main(VS_IN input)
 	GS_OUT output = (GS_OUT)0;
 
 	output.Pos = float4(input.Pos, 1.0f);
-	output.Norm = float4(input.Norm, 1.0f);
+	output.Norm = float4(input.Norm, 0.0f);
 	output.Tex = input.Tex;
 
 	return output;

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+      <FILENAME>obj.cpp</FILENAME>
+      <LINE>189</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>6386</DEFECTCODE>
+    <DESCRIPTION>Buffer overrun while writing to 'tempArray':  the writable size is '*capacity*12' bytes, but '24' bytes might be written.</DESCRIPTION>
+    <FUNCTION>OBJ::ExpandVertexArray</FUNCTION>
+    <DECORATED>?ExpandVertexArray@OBJ@@QAEXHPAHPAUVertexInfo@1@@Z</DECORATED>
+    <FUNCLINE>181</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>183</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>185</LINE>
+        <COLUMN>11</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'tempArray' is an array of 1 elements (12 bytes)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>19</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'i&lt;tmpi')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>189</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>190</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>191</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>28</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'i' may equal 1</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>19</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Continue this loop, (assume 'i&lt;tmpi')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>189</LINE>
+        <COLUMN>17</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>Invalid write to 'tempArray[1]', (writable range is 0 to 0)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+      <FILENAME>obj.cpp</FILENAME>
+      <LINE>196</LINE>
+      <COLUMN>64</COLUMN>
+    </SFA>
+    <DEFECTCODE>6385</DEFECTCODE>
+    <DESCRIPTION>Reading invalid data from 'tempArray':  the readable size is '*capacity*12' bytes, but '24' bytes may be read.</DESCRIPTION>
+    <FUNCTION>OBJ::ExpandVertexArray</FUNCTION>
+    <DECORATED>?ExpandVertexArray@OBJ@@QAEXHPAHPAUVertexInfo@1@@Z</DECORATED>
+    <FUNCLINE>181</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>183</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>185</LINE>
+        <COLUMN>11</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'tempArray' is an array of 1 elements (12 bytes)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>189</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>190</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>191</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>28</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>189</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>190</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>191</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>28</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>187</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>194</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>194</LINE>
+        <COLUMN>19</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'i&lt;tmpi')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>196</LINE>
+        <COLUMN>64</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>197</LINE>
+        <COLUMN>52</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>198</LINE>
+        <COLUMN>52</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>194</LINE>
+        <COLUMN>28</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'i' may equal 1</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>194</LINE>
+        <COLUMN>19</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Continue this loop, (assume 'i&lt;tmpi')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>196</LINE>
+        <COLUMN>64</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'i' is an In/Out argument to 'std::basic_ostream&lt;char,std::char_traits&lt;char&gt; &gt;::&lt;&lt;' (declared at c:\program files (x86)\microsoft visual studio 14.0\vc\include\ostream:415)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>196</LINE>
+        <COLUMN>64</COLUMN>
+        <KEYEVENT>
+          <ID>6</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>Invalid read from 'tempArray[1]', (readable range is 0 to 0)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+      <FILENAME>obj.cpp</FILENAME>
+      <LINE>215</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>6386</DEFECTCODE>
+    <DESCRIPTION>Buffer overrun while writing to 'tempTri':  the writable size is '*capacity*32' bytes, but '64' bytes might be written.</DESCRIPTION>
+    <FUNCTION>OBJ::ExpandVertexArray</FUNCTION>
+    <DECORATED>?ExpandVertexArray@OBJ@@QAEXHPAHPAUTriangleInfo@1@@Z</DECORATED>
+    <FUNCLINE>207</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>209</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>211</LINE>
+        <COLUMN>13</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'tempTri' is an array of 1 elements (32 bytes)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>213</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>213</LINE>
+        <COLUMN>19</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'i&lt;tmpi')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>215</LINE>
+        <COLUMN>13</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>213</LINE>
+        <COLUMN>28</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'i' may equal 1</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>213</LINE>
+        <COLUMN>19</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Continue this loop, (assume 'i&lt;tmpi')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\here! dumbass\bth\kurser\dv1541 3d-programmering\project\3d proj\3d_proj\3d_proj\</FILEPATH>
+        <FILENAME>obj.cpp</FILENAME>
+        <LINE>215</LINE>
+        <COLUMN>13</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>Invalid write to 'tempTri[1]', (writable range is 0 to 0)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT>
+</DEFECTS>

@@ -19,7 +19,7 @@ int WINAPI wWinMain(HMODULE hModule, HMODULE hPrevModule, LPWSTR lpCmdLine, int 
 
 	if (wndHandle)
 	{
-		Dx.CreateD3D(&wndHandle);
+		Dx.CreateD3D(hModule,&wndHandle);
 
 		ShowWindow(wndHandle, nCmdShow);
 
@@ -32,7 +32,7 @@ int WINAPI wWinMain(HMODULE hModule, HMODULE hPrevModule, LPWSTR lpCmdLine, int 
 			}
 			else
 			{
-				Dx.Render();
+				Dx.Update();
 			}
 		}
 		DestroyWindow(wndHandle);
@@ -85,6 +85,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+	
 	}
 
 	return DefWindowProc(hWnd, msg, wp, lp);
